@@ -1,6 +1,7 @@
-import { Home, User } from "lucide-react";
+import { Home, User, UserCircle } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import UserPage from "./pages/UserPage.jsx";
+import UserProfile from "./pages/UserProfile.jsx";
 
 /**
  * Central place for defining the navigation items. Used for navigation components and routing.
@@ -13,9 +14,15 @@ export const navItems = [
     page: <Index />,
   },
   {
-    title: "User",
+    title: "Add Content",
     to: "/user",
     icon: <User className="h-4 w-4" />,
     page: <UserPage />,
+  },
+  {
+    title: "Profile",
+    to: "/profile",
+    icon: <UserCircle className="h-4 w-4" />,
+    page: <UserProfile />,
   },
 ];

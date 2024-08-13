@@ -264,6 +264,18 @@ export const useDeleteUser = () => {
     });
 };
 
+export const useCurrentUser = () => {
+    return useQuery({
+        queryKey: ['currentUser'],
+        queryFn: async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return null;
+            const { data } = await supabase.from('users').select('*').eq('user_id', user.id).single();
+            return data;
+        },
+    });
+};
+
 // Collaboration hooks
 export const useCollaborations = () => useQuery({
     queryKey: ['collaborations'],
