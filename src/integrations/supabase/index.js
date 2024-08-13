@@ -17,6 +17,16 @@ const fromSupabase = async (query) => {
     return data;
 };
 
+// File upload function
+export const uploadFile = async (file, path) => {
+    const { data, error } = await supabase.storage
+        .from('files_bucket')
+        .upload(path, file);
+    
+    if (error) throw error;
+    return data;
+};
+
 /* supabase integration types
 
 ### content
