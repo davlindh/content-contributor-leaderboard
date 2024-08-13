@@ -24,6 +24,9 @@ const UserPage = () => {
     try {
       let attachmentPath = null;
       if (file) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+          throw new Error('File size exceeds 5MB limit');
+        }
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('files_bucket')
           .upload(`content/${Date.now()}_${file.name}`, file);
@@ -65,8 +68,19 @@ const UserPage = () => {
           <Textarea id="content_body" {...register('content_body')} className="w-full" rows={4} />
         </div>
         <div className="mb-4">
-          <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">Attachment</label>
-          <Input id="file" type="file" onChange={(e) => setFile(e.target.files[0])} />
+          <label htmlFor="file" className="block text-sm font-medium text-gray-700 mb-1">Attachment (max 5MB)</label>
+          <Input id="file" type="file" onChange={(e) => {
+            const selectedFile = e.target.files[0];
+            if (selectedFile && selectedFile.size > 5 * 1024 * 1024) {
+              toast({
+                title: "Error",
+                description: "File size exceeds 5MB limit",
+                variant: "destructive",
+              });
+            } else {
+              setFile(selectedFile);
+            }
+          }} />
         </div>
         <Button type="submit" className="w-full">Add Content</Button>
       </form>

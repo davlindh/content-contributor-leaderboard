@@ -54,6 +54,7 @@ const UserProfile = () => {
       <div className="min-h-screen p-8 bg-gray-100">
         <div className="max-w-xl mx-auto bg-white rounded-lg shadow-md p-6">
           <p className="text-red-500">Error loading user profile. Please try again later.</p>
+          <p className="text-sm text-gray-500 mt-2">Details: {isError?.message || 'Unknown error'}</p>
         </div>
       </div>
     );
