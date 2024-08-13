@@ -6,12 +6,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from '../integrations/supabase';
+import { useSupabaseAuth } from '../integrations/supabase/auth';
+import { Navigate } from 'react-router-dom';
 
 const UserPage = () => {
   const { register, handleSubmit, reset } = useForm();
   const addContent = useAddContent();
   const { toast } = useToast();
   const [file, setFile] = useState(null);
+  const { session } = useSupabaseAuth();
+
+  if (!session) {
+    return <Navigate to="/login" />;
+  }
 
   const onSubmit = async (data) => {
     try {
