@@ -5,6 +5,10 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_PROJECT_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_API_KEY;
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Log the Supabase URL and key (remove in production)
+console.log('Supabase URL:', supabaseUrl);
+console.log('Supabase Key:', supabaseKey);
+
 import React from "react";
 export const queryClient = new QueryClient();
 export function SupabaseProvider({ children }) {
