@@ -3,17 +3,44 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Trophy } from "lucide-react";
 import UserProfile from '../components/UserProfile';
+import { useUsers } from '../integrations/supabase';
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Index = () => {
-  const [users, setUsers] = useState([
-    { id: 1, name: "Alice", contributions: 150, content: ["Article A", "Video B", "Tutorial C"] },
-    { id: 2, name: "Bob", contributions: 120, content: ["Article X", "Video Y"] },
-    { id: 3, name: "Charlie", contributions: 100, content: ["Tutorial Z", "Article W"] },
-    { id: 4, name: "Diana", contributions: 80, content: ["Video V", "Article U"] },
-    { id: 5, name: "Ethan", contributions: 60, content: ["Tutorial T"] },
-  ]);
-
+  const { data: users, isLoading, isError } = useUsers();
   const [selectedUser, setSelectedUser] = useState(null);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen p-8 bg-gray-100">
+        <h1 className="text-4xl font-bold mb-6 text-center">Top Contributors</h1>
+        <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md overflow-hidden p-4">
+          <Skeleton className="h-8 w-full mb-4" />
+          <Skeleton className="h-8 w-full mb-4" />
+          <Skeleton className="h-8 w-full mb-4" />
+          <Skeleton className="h-8 w-full mb-4" />
+          <Skeleton className="h-8 w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen p-8 bg-gray-100">
+        <h1 className="text-4xl font-bold mb-6 text-center">Top Contributors</h1>
+        <Alert variant="destructive" className="max-w-3xl mx-auto">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            There was an error loading the contributors. Please try again later.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  const sortedUsers = [...users].sort((a, b) => b.contributions - a.contributions).slice(0, 5);
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
@@ -29,16 +56,16 @@ const Index = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user, index) => (
-              <TableRow key={user.id}>
+            {sortedUsers.map((user, index) => (
+              <TableRow key={user.user_id}>
                 <TableCell>
                   {index === 0 && <Trophy className="h-6 w-6 text-yellow-500" />}
                   {index === 1 && <Trophy className="h-6 w-6 text-gray-400" />}
                   {index === 2 && <Trophy className="h-6 w-6 text-amber-600" />}
                   {index > 2 && index + 1}
                 </TableCell>
-                <TableCell className="font-medium">{user.name}</TableCell>
-                <TableCell>{user.contributions}</TableCell>
+                <TableCell className="font-medium">{user.username}</TableCell>
+                <TableCell>{user.contributions || 0}</TableCell>
                 <TableCell className="text-right">
                   <Badge
                     className="cursor-pointer"
