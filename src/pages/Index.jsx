@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Trophy } from "lucide-react";
@@ -16,11 +16,9 @@ const Index = () => {
       <div className="min-h-screen p-8 bg-gray-100">
         <h1 className="text-4xl font-bold mb-6 text-center">Top Contributors</h1>
         <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md overflow-hidden p-4">
-          <Skeleton className="h-8 w-full mb-4" />
-          <Skeleton className="h-8 w-full mb-4" />
-          <Skeleton className="h-8 w-full mb-4" />
-          <Skeleton className="h-8 w-full mb-4" />
-          <Skeleton className="h-8 w-full" />
+          {[...Array(5)].map((_, index) => (
+            <Skeleton key={index} className="h-8 w-full mb-4" />
+          ))}
         </div>
       </div>
     );
@@ -40,7 +38,7 @@ const Index = () => {
     );
   }
 
-  const sortedUsers = [...users].sort((a, b) => b.contributions - a.contributions).slice(0, 5);
+  const sortedUsers = users ? [...users].sort((a, b) => (b.contributions || 0) - (a.contributions || 0)).slice(0, 5) : [];
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
