@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Trophy } from "lucide-react";
@@ -7,11 +7,25 @@ import { useUsers } from '../integrations/supabase';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
+const contributors = [
+  { name: "GPT-Engineer", contributions: Math.floor(Math.random() * 1000) },
+  { name: "Blue Science Park", contributions: Math.floor(Math.random() * 1000) },
+  { name: "Istudios Visuals", contributions: Math.floor(Math.random() * 1000) },
+  { name: "Paraply Production", contributions: Math.floor(Math.random() * 1000) },
+  { name: "GBCCAM.ORG", contributions: Math.floor(Math.random() * 1000) },
+  { name: "REWAC.ORG", contributions: Math.floor(Math.random() * 1000) }
+];
+
 const Index = () => {
-  const { data: users, isLoading, isError } = useUsers();
+  const [sortedContributors, setSortedContributors] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  if (isLoading) {
+  useEffect(() => {
+    const sorted = [...contributors].sort((a, b) => b.contributions - a.contributions);
+    setSortedContributors(sorted);
+  }, []);
+
+  if (sortedContributors.length === 0) {
     return (
       <div className="min-h-screen p-8 bg-gray-100">
         <h1 className="text-4xl font-bold mb-6 text-center">Top Contributors</h1>
@@ -23,22 +37,6 @@ const Index = () => {
       </div>
     );
   }
-
-  if (isError) {
-    return (
-      <div className="min-h-screen p-8 bg-gray-100">
-        <h1 className="text-4xl font-bold mb-6 text-center">Top Contributors</h1>
-        <Alert variant="destructive" className="max-w-3xl mx-auto">
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>
-            There was an error loading the contributors. Please try again later.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  const sortedUsers = users ? [...users].sort((a, b) => (b.contributions || 0) - (a.contributions || 0)).slice(0, 5) : [];
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
@@ -54,20 +52,20 @@ const Index = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {sortedUsers.map((user, index) => (
-              <TableRow key={user.user_id}>
+            {sortedContributors.map((contributor, index) => (
+              <TableRow key={contributor.name}>
                 <TableCell>
                   {index === 0 && <Trophy className="h-6 w-6 text-yellow-500" />}
                   {index === 1 && <Trophy className="h-6 w-6 text-gray-400" />}
                   {index === 2 && <Trophy className="h-6 w-6 text-amber-600" />}
                   {index > 2 && index + 1}
                 </TableCell>
-                <TableCell className="font-medium">{user.username}</TableCell>
-                <TableCell>{user.contributions || 0}</TableCell>
+                <TableCell className="font-medium">{contributor.name}</TableCell>
+                <TableCell>{contributor.contributions}</TableCell>
                 <TableCell className="text-right">
                   <Badge
                     className="cursor-pointer"
-                    onClick={() => setSelectedUser(user)}
+                    onClick={() => setSelectedUser(contributor)}
                   >
                     View Profile
                   </Badge>
