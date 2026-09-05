@@ -1,0 +1,12 @@
+version: 1
+repository: davlindh/content-contributor-leaderboard
+purpose: Contribution ranking and recognition experiment.
+status: experimental-reference
+canonical_parent: davlindh/faving-journey-shaper
+capabilities: [contributions, reputation, ranking]
+vertical: platform-research
+omniframez_role: trust-evaluation-experiment
+evidence: {confidence: inferred, sources: [repository-name]}
+harvest_action: inspect-and-harvest-unique-capabilities
+relations:
+  - contributes_to: explainable contribution and reputation evidence
